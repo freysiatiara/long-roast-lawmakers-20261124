@@ -26,6 +26,13 @@ def resolve_output_path():
     return os.path.join(os.sep, "output", "entry.txt")
 
 
+def ensure_single_spacing(text):
+    """Guard: no double spaces — a single sentence must be cleanly spaced."""
+    if "  " in text:
+        raise ValueError("entry must not contain double spaces")
+    return text
+
+
 def validate(text):
     """Gate: 1-320 UTF-8 characters, one sentence, not whitespace only."""
     if not text or not text.strip():
@@ -33,6 +40,7 @@ def validate(text):
     if len(text) > 320:
         raise ValueError("entry exceeds 320 characters: %d" % len(text))
     stripped = text.strip()
+    ensure_single_spacing(stripped)
     if stripped.count(".") != 1 or not stripped.endswith("."):
         raise ValueError("entry must be exactly one sentence")
     return stripped
